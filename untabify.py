@@ -84,7 +84,7 @@ def GetOptions():
 
     return which_file, int(num), 0
 
-  except (getopt.GetoptError, KeyError), err:
+  except (getopt.GetoptError, KeyError) as err:
     str_err = '%s\n\n%s' % (str(err), __doc__)
     sys.stderr.write(str_err)
     return None, None, -1
@@ -109,7 +109,7 @@ def main():
     else:
       if which_file is None:
         # -h/--help was specified.
-        print '%s\n' % __doc__
+        sys.stdout.write('%s\n' % __doc__)
         return ret_val
 
     # Process the file.
@@ -117,10 +117,9 @@ def main():
 
     return 0
 
-  except (IOError, OSError, MemoryError), err:
+  except (IOError, OSError, MemoryError) as err:
     sys.stderr.write('%s\n' % str(err))
     return 1 
 
 if '__main__' == __name__:
   sys.exit(main())
-
