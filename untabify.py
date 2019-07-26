@@ -45,6 +45,7 @@ def get_options():
 
   """
   try:
+    # pylint: disable=unused-variable
     opts, args = getopt.getopt(sys.argv[1:], 'f:hs:', ['help', 'file=', 'space_count='])
 
     # Process the arguments.
@@ -68,7 +69,7 @@ def get_options():
       num = _DEF_NUM
     else:
       # Check to see that num is an integer.
-      num_regex = re.compile('^\d+$')
+      num_regex = re.compile(r'^\d+$')
       get_match = num_regex.match(num)
       if not get_match:
         sys.stderr.write('--space_count: Invalid value. Using default value of %s\n' % _DEF_NUM)
