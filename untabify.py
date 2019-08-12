@@ -69,8 +69,7 @@ def get_options():
       num = _DEF_NUM
     else:
       # Check to see that num is an integer.
-      get_match = re.compile(r'^\d+$').match(num)
-      if not get_match or int(num) < 1:
+      if not re.compile(r'^\d+$').match(num) or int(num) < 1:
         raise KeyError('--space_count: Invalid value: %s' % num)
 
     return which_file, int(num), 0
