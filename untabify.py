@@ -12,7 +12,7 @@ with the specified number of spaces.
 
 Usage: ./untabify [--help|-h] --file[-f]=<file> --space_count[-s]=<integer number>
   -f --file         The file to process. Required.
-  -s --space_count  Replace tabs with this number of spaces. Default: 2
+  -s --space_count  Replace tabs with this number of spaces. Must be at least 1. Default: 2
                     Optional.
   -h --help         Print this and exit.
 
@@ -69,16 +69,13 @@ def get_options():
       num = _DEF_NUM
     else:
       # Check to see that num is an integer.
-      num_regex = re.compile(r'^\d+$')
-      get_match = num_regex.match(num)
+      get_match = re.compile(r'^\d+$').match(num)
       if not get_match:
-        sys.stderr.write('--space_count: Invalid value. Using default value of %s\n' % _DEF_NUM)
-        num = _DEF_NUM
+        raise KeyError('--space_count: Invalid value: %s' % num)
       else:
         # Check if num is greater than 0.
         if int(num) < 1:
-          sys.stderr.write('--space_count: Invalid value. Using default value of %s\n' % _DEF_NUM)
-          num = _DEF_NUM
+          raise KeyError('--space_count: Invalid value: %s' % num)
 
     return which_file, int(num), 0
 
@@ -87,18 +84,18 @@ def get_options():
     sys.stderr.write(str_err)
     return None, None, -1
 
+
 def untabify(filename, spacecount):
   """Replace tab chars with number of spaces per tab."""
 
-  # Set up the space count to replace tabs with.
-  str_space = ' ' * spacecount
   # Open the file and edit in place.
   file_desc = fileinput.FileInput(filename, 1)
   for line in file_desc:
     # use stdout since with fileinput uses it to edit file in place.
-    sys.stdout.write(line.replace('\t', str_space))
+    sys.stdout.write(line.replace('\t', ' ' * spacecount))
 
   file_desc.close()
+
 
 def main():
   """Main method."""
@@ -122,6 +119,7 @@ def main():
   except (IOError, OSError, MemoryError) as err:
     sys.stderr.write('%s\n' % str(err))
     return 1
+
 
 if __name__ == '__main__':
   sys.exit(main())
