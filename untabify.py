@@ -70,12 +70,8 @@ def get_options():
     else:
       # Check to see that num is an integer.
       get_match = re.compile(r'^\d+$').match(num)
-      if not get_match:
+      if not get_match or int(num) < 1:
         raise KeyError('--space_count: Invalid value: %s' % num)
-      else:
-        # Check if num is greater than 0.
-        if int(num) < 1:
-          raise KeyError('--space_count: Invalid value: %s' % num)
 
     return which_file, int(num), 0
 
