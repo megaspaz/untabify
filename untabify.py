@@ -63,18 +63,18 @@ def get_options():
 
     # Check to see if all required arguments were specified.
     if which_file == '':
-      raise KeyError('Missing required argument.')
+      raise ValueError('Missing required argument.')
 
     if num == '':
       num = _DEF_NUM
     else:
       # Check to see that num is an integer.
       if not re.compile(r'^\d+$').match(num) or int(num) < 1:
-        raise KeyError('--space_count: Invalid value: %s' % num)
+        raise ValueError('--space_count: Invalid value: %s' % num)
 
     return which_file, int(num), 0
 
-  except (getopt.GetoptError, KeyError) as err:
+  except (getopt.GetoptError, KeyError, ValueError) as err:
     str_err = '%s\n\n%s' % (str(err), __doc__)
     sys.stderr.write(str_err)
     return None, None, -1
