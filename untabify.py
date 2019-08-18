@@ -20,10 +20,11 @@ Usage: ./untabify [--help|-h] --file[-f]=<file> --space_count[-s]=<integer numbe
 
 __author__ = "megaspaz <megaspaz2k7 <at> gmail.com>"
 
-import fileinput
 import getopt
+import os
 import re
 import sys
+import fileinput
 
 # Constants
 _DEF_NUM = 2
@@ -62,8 +63,8 @@ def get_options():
         raise KeyError('Bad arguments.')
 
     # Check to see if all required arguments were specified.
-    if which_file == '':
-      raise ValueError('Missing required argument.')
+    if which_file == '' or os.path.isdir(which_file):
+      raise ValueError('Missing required argument (--file or -f) or value is a directory.')
 
     if num == '':
       num = _DEF_NUM
@@ -75,9 +76,7 @@ def get_options():
     return which_file, int(num), 0
 
   except (getopt.GetoptError, KeyError, ValueError) as err:
-    str_err = '%s\n\n%s' % (str(err), __doc__)
-    sys.stderr.write(str_err)
-    return None, None, -1
+    return err, None, -1
 
 
 def untabify(filename, spacecount):
@@ -99,6 +98,7 @@ def main():
     # Get the options.
     which_file, num, ret_val = get_options()
     if ret_val:
+      sys.stderr.write('\nERROR: %s\n\n%s' % (which_file, __doc__))
       return ret_val
 
     if which_file is None:
